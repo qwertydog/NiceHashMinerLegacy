@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Text;
 using System.Net.Sockets;
+using System.Windows.Forms;
 
 namespace NiceHashMiner.Miners
 {
@@ -221,22 +222,27 @@ namespace NiceHashMiner.Miners
 
         protected override bool BenchmarkParseLine(string outdata)
         {
-            Helpers.ConsolePrint("BENCHMARK1:", outdata);
-
+            double tmp = 0;
             if (true)
             {
                 if (outdata.Contains("GPU") && outdata.Contains("/s"))
                 {
-                    Helpers.ConsolePrint("BENCHMARK2:", outdata);
                     var st = outdata.IndexOf("Avr ");
                     var e = outdata.IndexOf("/s)");
-
+                try { 
                     var parse = outdata.Substring(st + 4, e - st - 6).Trim().Replace(",",".");
-                    double tmp = Double.Parse(parse, CultureInfo.InvariantCulture);
-                    // save speed
-                    Helpers.ConsolePrint("BENCHMARK!", BenchmarkAlgorithm.AlgorithmName);
-//                    if (BenchmarkAlgorithm.AlgorithmName == "Lyra2REv2") //Avr 27,57Mh/s
-                    {
+                    tmp = Double.Parse(parse, CultureInfo.InvariantCulture);
+                } catch
+                {
+                    MessageBox.Show("Unsupported miner version " + MiningSetup.MinerPath,
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    BenchmarkSignalFinnished = true;
+                    return false;
+                }
+                // save speed
+
+                //                    if (BenchmarkAlgorithm.AlgorithmName == "Lyra2REv2") //Avr 27,57Mh/s
+                {
 //                        Helpers.ConsolePrint("BENCHMARK", "Lyra2REv2 benchmark ends");
                         if (outdata.ToUpper().Contains("KH/S"))
                             tmp *= 1000;
@@ -377,6 +383,7 @@ namespace NiceHashMiner.Miners
         {
             CurrentMinerReadStatus = MinerApiReadStatus.NONE;
             var ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
+            double tmp = 0;
 
             string resp = null;
             try
@@ -402,7 +409,16 @@ namespace NiceHashMiner.Miners
                     var st = resp.IndexOf(";KHS=");
                     var e = resp.IndexOf(";SOLV=");
                     var parse = resp.Substring(st + 5, e - st - 5).Trim();
-                    double tmp = Double.Parse(parse, CultureInfo.InvariantCulture);
+                try
+                {
+                    tmp = Double.Parse(parse, CultureInfo.InvariantCulture);
+                }
+                catch
+                {
+                    MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    BenchmarkSignalFinnished = true;
+                }
                 ad.Speed = tmp*1000;
 
                 if (ad.Speed == 0)

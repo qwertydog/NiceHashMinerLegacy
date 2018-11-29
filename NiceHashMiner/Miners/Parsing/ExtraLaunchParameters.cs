@@ -142,7 +142,18 @@ namespace NiceHashMiner.Miners.Parsing
                 MinerType.teamredminer,
                 new List<MinerOption>() {
                     // SingleParam
-                    new MinerOption("Platform", "", "--platform=", null, MinerOptionFlagType.SingleParam, "")
+                    new MinerOption("Platform", "", "--platform=", null, MinerOptionFlagType.SingleParam, ""),
+                    new MinerOption("TRMintensity", "", "--cn_config=", "-1", MinerOptionFlagType.MultiParam, ",")
+                },
+                // TemperatureOptions
+                new List<MinerOption>() {
+                }
+            ),
+            new MinerOptionPackage(
+                MinerType.lolMiner,
+                new List<MinerOption>() {
+                    // SingleParam
+                    new MinerOption("lolMiner_log", "", "--logs", "0", MinerOptionFlagType.SingleParam, "")
                 },
                 // TemperatureOptions
                 new List<MinerOption>() {
@@ -410,18 +421,18 @@ namespace NiceHashMiner.Miners.Parsing
                 MinerType.Phoenix,
                 new List<MinerOption>
                 {
-                    new MinerOption("Phoenix_stales", "-stales", "-stales", "1", MinerOptionFlagType.SingleParam, ","),
+                    new MinerOption("Phoenix_stales", "-stales", "-stales", "0", MinerOptionFlagType.SingleParam, ","),
                     new MinerOption("Phoenix_ftimeout", "-ftimeout", "-ftimeout", "", MinerOptionFlagType.SingleParam, ","),
                     new MinerOption("Phoenix_AMD", "-amd", "-amd", "", MinerOptionFlagType.SingleParam, ","),
                     new MinerOption("Phoenix_NVIDIA", "-nvidia", "-nvidia", "", MinerOptionFlagType.SingleParam, ","),
                     new MinerOption("Phoenix_acm", "-acm", "-acm", "", MinerOptionFlagType.SingleParam, ","),
-                    new MinerOption("Phoenix_mi", "-mi", "-mi", "12", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("Phoenix_gt", "-gt", "-gt", "15", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("Phoenix_clKernel", "-clKernel", "-clKernel", "1", MinerOptionFlagType.SingleParam, ","),
-                    new MinerOption("Phoenix_clNew", "-clNew", "-clNew", "1", MinerOptionFlagType.SingleParam, ","),
-                    new MinerOption("Phoenix_clf", "-clf", "-clf", "1", MinerOptionFlagType.SingleParam, ","),
-                    new MinerOption("Phoenix_nvNew", "-nvNew", "-nvNew", "1", MinerOptionFlagType.SingleParam, ","),
-                    new MinerOption("Phoenix_nvf", "-nvf", "-nvf", "1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("Phoenix_mi", "-mi", "-mi", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("Phoenix_gt", "-gt", "-gt", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("Phoenix_clKernel", "-clKernel", "-clKernel", "0", MinerOptionFlagType.SingleParam, ","),
+                    new MinerOption("Phoenix_clNew", "-clNew", "-clNew", "0", MinerOptionFlagType.SingleParam, ","),
+                    new MinerOption("Phoenix_clf", "-clf", "-clf", "0", MinerOptionFlagType.SingleParam, ","),
+                    new MinerOption("Phoenix_nvNew", "-nvNew", "-nvNew", "0", MinerOptionFlagType.SingleParam, ","),
+                    new MinerOption("Phoenix_nvf", "-nvf", "-nvf", "0", MinerOptionFlagType.MultiParam, ","),
                 },
                 new List<MinerOption>
                 {
@@ -447,6 +458,17 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("EWBF_solver", "--solver", "--solver", "0", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("EWBF_intensity", "--intensity", "--intensity", "64", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("EWBF_powercalc", "--pec", "--pec", null, MinerOptionFlagType.Uni, " "),
+                },
+                new List<MinerOption>()
+            ),
+            new MinerOptionPackage(
+                MinerType.GMiner,
+                new List<MinerOption>
+                {
+                    // parameters differ according to algorithm
+                    new MinerOption("GMiner_logfile", "-l", "--logfile", "0", MinerOptionFlagType.SingleParam, " "),
+                    new MinerOption("GMiner_templimit", "-t", "--templimit", "0", MinerOptionFlagType.SingleParam, " "),
+                    new MinerOption("GMiner_tempunits", "-w", "--watchdog", "C", MinerOptionFlagType.SingleParam, " "),
                 },
                 new List<MinerOption>()
             ),

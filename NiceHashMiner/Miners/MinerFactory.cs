@@ -100,6 +100,10 @@ namespace NiceHashMiner.Miners
                     return new teamredminer();
                 case MinerBaseType.Phoenix:
                     return new Phoenix();
+                case MinerBaseType.GMiner:
+                    return new GMiner();
+                case MinerBaseType.lolMiner:
+                    return new lolMiner();
             }
 
             return null;

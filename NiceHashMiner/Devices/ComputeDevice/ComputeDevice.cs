@@ -341,7 +341,17 @@ namespace NiceHashMiner.Devices
                 MinerBaseType.OptiminerAMD,
                 MinerBaseType.EWBF,
                 MinerBaseType.Prospector,
-                MinerBaseType.dstm
+                MinerBaseType.dstm,
+                MinerBaseType.CryptoDredge,
+                MinerBaseType.hsrneoscrypt,
+                MinerBaseType.Phoenix,
+                MinerBaseType.trex,
+                MinerBaseType.ZEnemy,
+                MinerBaseType.CastXMR,
+                MinerBaseType.SRBMiner,
+                MinerBaseType.teamredminer,
+                MinerBaseType.GMiner,
+                MinerBaseType.lolMiner
             };
 
             return AlgorithmSettings.FindAll(a => thirdPartyMiners.IndexOf(a.MinerBaseType) == -1);

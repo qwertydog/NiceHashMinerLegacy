@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Text;
 using System.Net.Sockets;
+using System.Windows.Forms;
 
 namespace NiceHashMiner.Miners
 {
@@ -83,7 +84,8 @@ namespace NiceHashMiner.Miners
 
 
             return " -gpus " + GetDevicesCommandString() + platform + "-retrydelay 10"
-                   + $" -pool {url} -wal {username} -cdmport  127.0.0.1:{ApiPort} -proto 4 -pass x ";
+                   + $" -pool {url} -wal {username} -cdmport  127.0.0.1:{ApiPort} -proto 4 -pass x " +
+                   ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
 
         }
 
@@ -110,7 +112,8 @@ namespace NiceHashMiner.Miners
             Thread.Sleep(200);
 
             return " -gpus " + GetDevicesCommandString() + platform + "-retrydelay 10"
-                   + $" -pool {url} -wal {username2} -cdmport  127.0.0.1:{ApiPort} -pass x ";
+                   + $" -pool {url} -wal {username2} -cdmport  127.0.0.1:{ApiPort} -pass x " +
+                   ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD); 
 
         }
 
@@ -118,7 +121,7 @@ namespace NiceHashMiner.Miners
         {
             var deviceStringCommand = " ";
             var ids = MiningSetup.MiningPairs.Select(mPair => (mPair.Device.IDByBus + 1).ToString()).ToList();
-            deviceStringCommand += string.Join("", ids);
+            deviceStringCommand += string.Join(",", ids);
             return deviceStringCommand;
         }
 
@@ -175,8 +178,18 @@ namespace NiceHashMiner.Miners
                     var st = outdata.IndexOf("Eth speed: ");
                     var e = outdata.IndexOf("/s, shares");
                     var parse = outdata.Substring(st + 11, e - st - 14).Trim().Replace(",", ".");
-                     speed = Double.Parse(parse, CultureInfo.InvariantCulture);
- 
+                    try
+                    {
+                        speed = Double.Parse(parse, CultureInfo.InvariantCulture);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        BenchmarkSignalFinnished = true;
+                        return false;
+                    }
+
                     if (outdata.ToUpper().Contains("KH/S"))
                         speed *= 1000;
                     else if (outdata.ToUpper().Contains("MH/S"))

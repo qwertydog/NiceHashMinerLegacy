@@ -109,6 +109,7 @@ namespace NiceHashMiner.Miners.Grouping
             public const string mkxminer = Bin3rdParty + @"\mkxminer\mkxminer.exe";
             public const string teamredminer = Bin3rdParty + @"\teamredminer\teamredminer.exe";
             public const string Phoenix = Bin3rdParty + @"\Phoenix\PhoenixMiner.exe";
+            public const string lolMiner = Bin3rdParty + @"\lolMiner\lolMiner.exe";
 
             public const string None = "";
 
@@ -130,6 +131,7 @@ namespace NiceHashMiner.Miners.Grouping
             public const string ZEnemy = Bin3rdParty + @"\Z-Enemy\z-enemy.exe";
             public const string trex = Bin3rdParty + @"\t-rex\t-rex.exe";
             public const string SRBMiner = Bin3rdParty + @"\SRBMiner\SRBMiner-CN.exe";
+            public const string GMiner = Bin3rdParty + @"\gminer\miner.exe";
         }
 
         // NEW START
@@ -218,6 +220,10 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.teamredminer;
                 case MinerBaseType.Phoenix:
                     return Data.Phoenix;
+                case MinerBaseType.GMiner:
+                    return Data.GMiner;
+                case MinerBaseType.lolMiner:
+                    return Data.lolMiner;
             }
             return Data.None;
         }
@@ -441,7 +447,19 @@ namespace NiceHashMiner.Miners.Grouping
                 {
                     return Data.teamredminer;
                 }
+                if (AlgorithmType.CryptoNightV8 == algorithmType)
+                {
+                    return Data.teamredminer;
+                }
                 return Data.teamredminer;
+            }
+            public static string lolMiner(AlgorithmType algorithmType)
+            {
+                if (AlgorithmType.ZHash == algorithmType )
+                {
+                    return Data.lolMiner;
+                }
+                return Data.lolMiner;
             }
         }
 
