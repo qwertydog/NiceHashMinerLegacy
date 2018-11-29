@@ -1,5 +1,4 @@
 using Newtonsoft.Json;
-using System.Collections.Generic;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
 
@@ -10,13 +9,13 @@ namespace NiceHashMiner
         // Constants
         public static string[] MiningLocation = {"eu", "usa", "hk", "jp", "in", "br"};
 
-        public static readonly string DemoUser = "3LysVG8rv8gzcYVAqkqLUzjSJSrE6pATJB";
+        public static readonly string DemoUser = "3C5J6E5Fc74DkvL8oQdTWvCWi715JcuTHR";
         
         // change this if TOS changes
         public static int CurrentTosVer = 3;
 
         // Variables
-        public static JsonSerializerSettings JsonSettings = null;
+        public static JsonSerializerSettings JsonSettings;
 
         public static int ThreadsPerCpu;
 
@@ -26,7 +25,6 @@ namespace NiceHashMiner
         public static int FirstNetworkCheckTimeoutTimeMs = 500;
         public static int FirstNetworkCheckTimeoutTries = 10;
 
-
         public static string GetLocationUrl(AlgorithmType algorithmType, string miningLocation, NhmConectionType conectionType)
         {
             if (!NHSmaData.TryGetSma(algorithmType, out var sma)) return "";
@@ -35,7 +33,6 @@ namespace NiceHashMiner
             var nPort = sma.Port;
             var sslPort = 30000 + nPort;
 
-            // NHMConectionType.NONE
             var prefix = "";
             var port = nPort;
             switch (conectionType)
