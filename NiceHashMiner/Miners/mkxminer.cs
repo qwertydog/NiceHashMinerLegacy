@@ -62,6 +62,7 @@ namespace NiceHashMiner.Miners
             {
                 return;
             }
+            Process proc;
             ManagementObjectSearcher searcher = new ManagementObjectSearcher
                     ("Select * From Win32_Process Where ParentProcessID=" + pid);
             ManagementObjectCollection moc = searcher.Get();
@@ -71,8 +72,17 @@ namespace NiceHashMiner.Miners
             }
             try
             {
-                Process proc = Process.GetProcessById(pid);
+                proc = Process.GetProcessById(pid);
                 proc.Kill();
+                /*
+                Thread.Sleep(200);
+                if (proc != null)
+                {
+                    foreach (Process process in Process.GetProcessesByName("mkxminer")) {
+                         try { process.Kill(); } catch (Exception e) { Helpers.ConsolePrint("mkxminer-kill", e.ToString()); }
+                    }
+                }
+                */
             }
             catch (ArgumentException)
             {
@@ -204,37 +214,37 @@ protected override int GetMaxCooldownTimeInMilliseconds() {
             //> 0.32MH/s | Temp(C): 53 | Fan: - | HW: 0 | Rej: 0.0%
             // > Off Off 0.00MH/s Off Off
             //Accepted diff 2 share 111ce87a GPU#0 in 117ms
-            if (outdata.Contains("Temp(C)") )
+            try
             {
-//                int i = outdata.IndexOf("> ");
-                int k = outdata.IndexOf("H/s");
-                int i = k - 6;
-                hashSpeed = outdata.Substring(i , k - i - 1).Trim();
-                Helpers.ConsolePrint(hashSpeed, "");
-                if (outdata.Contains("H/s"))
+                if (outdata.Contains("Temp(C)"))
                 {
-                    kspeed = 1;
-                }
-                if (outdata.Contains("KH/s"))
-                {
-                    kspeed = 1000;
-                }
-                if (outdata.Contains("MH/s"))
-                {
-                    kspeed = 1000000;
-                }
-                try
-                {
+                    //                int i = outdata.IndexOf("> ");
+                    int k = outdata.IndexOf("H/s");
+                    int i = k - 6;
+                    hashSpeed = outdata.Substring(i, k - i - 1).Trim();
+                    Helpers.ConsolePrint(hashSpeed, "");
+                    if (outdata.Contains("H/s"))
+                    {
+                        kspeed = 1;
+                    }
+                    if (outdata.Contains("KH/s"))
+                    {
+                        kspeed = 1000;
+                    }
+                    if (outdata.Contains("MH/s"))
+                    {
+                        kspeed = 1000000;
+                    }
                     speed = Double.Parse(hashSpeed, CultureInfo.InvariantCulture);
-                }
-                catch
-                {
-                    MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
-                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    BenchmarkSignalFinnished = true;
+                    BenchmarkAlgorithm.BenchmarkSpeed = Math.Max(BenchmarkAlgorithm.BenchmarkSpeed, speed * kspeed);
                     return false;
                 }
-                BenchmarkAlgorithm.BenchmarkSpeed = Math.Max(BenchmarkAlgorithm.BenchmarkSpeed, speed * kspeed);
+            }
+            catch
+            {
+                MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                BenchmarkSignalFinnished = true;
                 return false;
             }
 

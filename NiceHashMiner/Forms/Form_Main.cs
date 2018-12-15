@@ -46,7 +46,7 @@ namespace NiceHashMiner
         private int _flowLayoutPanelRatesIndex = 0;
 
         private const string BetaAlphaPostfixString = "";
-        const string ForkString = " Fork Fix 11";
+        const string ForkString = " Fork Fix 11.1";
 
         private bool _isDeviceDetectionInitialized = false;
 
@@ -864,7 +864,7 @@ namespace NiceHashMiner
             if (programVersionn < vern)
             {
                 Helpers.ConsolePrint("Old version detected. Update needed.", "");
-                SetVersionLabel(string.Format(International.GetText("Form_Main_new_version_released").Replace("v{0}", "{0}"), ver));
+                SetVersionLabel(string.Format(International.GetText("Form_Main_new_version_released").Replace("v{0}", "{0}"), "Fork Fix "+ver));
                 //_visitUrlNew = Links.VisitUrlNew + ver;
                 _visitUrlNew = Links.VisitUrlNew;
             }
