@@ -225,9 +225,9 @@ namespace NiceHashMiner.Miners
 
             var server = Globals.GetLocationUrl(algorithm.NiceHashID,
                 Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], ConectionType);
-            //var ret = $" --logfile {GetLogFileName()} " + GetStartCommand(server, Globals.GetBitcoinUser(),
-            //              ConfigManager.GeneralConfig.WorkerName.Trim());
-            var ret = " --logfile " + GetLogFileName() + " --color 0 --pec --pers BgoldPoW --algo 144_5 --server europe.equihash-hub.miningpoolhub.com --user angelbbs.FBench11 --pass x --port 20595 " + GetDevicesCommandString();
+            var ret = $" --logfile {GetLogFileName()} " + GetStartCommand(server, Globals.GetBitcoinUser(),
+                          ConfigManager.GeneralConfig.WorkerName.Trim());
+            //var ret = " --logfile " + GetLogFileName() + " --color 0 --pec --pers BgoldPoW --algo 144_5 --server europe.equihash-hub.miningpoolhub.com --user 3C5J6E5Fc74DkvL8oQdTWvCWi715JcuTHR.worker1 --pass x --port 20595 " + GetDevicesCommandString();
             _benchmarkTimeWait = Math.Max(time * 3, 90); //
             return ret;
         }
